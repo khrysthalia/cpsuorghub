@@ -168,15 +168,15 @@
         }
         .club-card:hover::after { background: var(--cpsu-green); }
 
-        /* --- IN-UPDATE NA LOGO CONTAINER (PABILOG) --- */
+        
         .org-logo-container {
             width: 110px; height: 110px; margin: 0 auto 1.5rem;
             display: flex; justify-content: center; align-items: center;
             background: #f8fafc; 
-            border-radius: 50%; /* Gawing circle */
+            border-radius: 50%; 
             border: 3px solid #f1f5f9; 
             transition: 0.3s;
-            overflow: hidden; /* Putulin ang image para sumunod sa bilog */
+            overflow: hidden; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .club-card:hover .org-logo-container { 
@@ -386,185 +386,203 @@
     </div>
 
     <script>
-        const API_URL = 'https://cpsuorghub-production.up.railway.app/users';
-        let currentAuthMode = 'login';
+    const API_URL = 'https://cpsuorghub-production.up.railway.app/users';
+    let currentAuthMode = 'login';
 
-        /* --- UPDATED ORG DATA: GINAMITAN LAHAT NG IMAGES --- */
-        const orgData = [
-            { name: "SSG", logo: "SSG.jpg", isImage: true, description: "The Supreme Student Government represents the student body and leads campus-wide initiatives for student welfare." }, 
-            { name: "CSS", logo: "CSS.jpg", isImage: true, description: "The College of Criminal Justice Education organization fosters discipline, integrity, and leadership for future law enforcers." },
-            { name: "FLP", logo: "FLP.jpg", isImage: true, description: "Future Leaders of the Philippines focuses on developing patriotism and character among student leaders." },
-            { name: "INFOTECH ORG", logo: "INFOTECH.jpg", isImage: true, description: "Building a community for IT enthusiasts to share knowledge, innovation, and technical expertise in technology." }, 
-            { name: "PEER SUPPORT", logo: "PEER.jpg", isImage: true, description: "Dedicated to promoting mental health awareness and providing a compassionate support system for every student." },
-            { name: "CAFFO", logo: "CAFFO.jpg", isImage: true, description: "Promoting excellence in Agriculture and Forestry through research, sustainability, and community farming." }, 
-            { name: "COMRADES", logo: "COMRADES.jpg", isImage: true, description: "Developing discipline and camaraderie through leadership training and civic-military student involvement." },
-            { name: "RED CROSS", logo: "REDCROSS.jpg", isImage: true, description: "Fostering humanitarian values and providing health and safety training for campus emergency response." }, 
-            { name: "CCYO", logo: "CCYO.jpg", isImage: true, description: "A spiritual home for Catholic youth to grow in faith, moral values, and community service." },
-            { name: "FIBO", logo: "FIBO.jpg", isImage: true, description: "Dedicated to the advancement of biological sciences and environmental research among biology majors." }, 
-            { name: "PATAPAS ORG", logo: "PATAPAS.jpg", isImage: true, description: "The PATAPAS Organization is a specialized group dedicated to the advancement of the sugarcane industry—the lifeblood of the region." },
-            { name: "EDSOC", logo: "EDSOC.png", isImage: true, description: "Empowering future educators with the professional skills and academic excellence needed in the teaching field." }, 
-            { name: "ASSC", logo: "ASSC.jpg", isImage: true, description: "Representing the Arts and Sciences students, promoting critical thinking and artistic expression." },
-            { name: "AGRIBUSINESS", logo: "AGRIBUSINESS.jpg", isImage: true, description: "Bridging the gap between agricultural production and commercial entrepreneurship for modern farmers." }, 
-            { name: "JPSTECH", logo: "JPSTECH.jpg", isImage: true, description: "The organization for industrial technology students, advancing technical skills and industrial innovations." }
-        ];
+    /* --- ORG DATA --- */
+    const orgData = [
+        { name: "SSG", logo: "SSG.jpg", isImage: true, description: "The Supreme Student Government represents the student body and leads campus-wide initiatives for student welfare." }, 
+        { name: "CSS", logo: "CSS.jpg", isImage: true, description: "The Crimonology Student Society organization fosters discipline, integrity, and leadership for future law enforcers." },
+        { name: "FLP", logo: "FLP.jpg", isImage: true, description: "Future Leaders of the Philippines focuses on developing patriotism and character among student leaders." },
+        { name: "INFOTECH ORG", logo: "INFOTECH.jpg", isImage: true, description: "Building a community for IT enthusiasts to share knowledge, innovation, and technical expertise in technology." }, 
+        { name: "PEER SUPPORT", logo: "PEER.jpg", isImage: true, description: "Dedicated to promoting mental health awareness and providing a compassionate support system for every student." },
+        { name: "CAFFO", logo: "CAFFO.jpg", isImage: true, description: "Promoting excellence in Agriculture and Forestry through research, sustainability, and community farming." }, 
+        { name: "COMRADES", logo: "COMRADES.jpg", isImage: true, description: "Developing discipline and camaraderie through leadership training and civic-military student involvement." },
+        { name: "RED CROSS", logo: "REDCROSS.jpg", isImage: true, description: "Fostering humanitarian values and providing health and safety training for campus emergency response." }, 
+        { name: "CCYO", logo: "CCYO.jpg", isImage: true, description: "A spiritual home for Catholic youth to grow in faith, moral values, and community service." },
+        { name: "FIBO", logo: "FIBO.jpg", isImage: true, description: "Dedicated to the advancement of biological sciences and environmental research among biology majors." }, 
+        { name: "PATAPAS ORG", logo: "PATAPAS.jpg", isImage: true, description: "The PATAPAS Organization is a specialized group dedicated to the advancement of the sugarcane industry—the lifeblood of the region." },
+        { name: "EDSOC", logo: "EDSOC.png", isImage: true, description: "Empowering future educators with the professional skills and academic excellence needed in the teaching field." }, 
+        { name: "ASSC", logo: "ASSC.jpg", isImage: true, description: "Representing the Arts and Sciences students, promoting critical thinking and artistic expression." },
+        { name: "AGRIBUSINESS", logo: "AGRIBUSINESS.jpg", isImage: true, description: "Bridging the gap between agricultural production and commercial entrepreneurship for modern farmers." }, 
+        { name: "JPSTECH", logo: "JPSTECH.jpg", isImage: true, description: "The organization for industrial technology students, advancing technical skills and industrial innovations." }
+    ];
 
-        function setAuthMode(mode) {
-            currentAuthMode = mode;
-            document.getElementById('auth-error').style.display = 'none';
-            document.getElementById('mode-login').classList.toggle('active', mode === 'login');
-            document.getElementById('mode-register').classList.toggle('active', mode === 'register');
-            document.getElementById('name-field-container').style.display = (mode === 'register') ? 'block' : 'none';
-            document.getElementById('submit-btn').innerText = (mode === 'register') ? 'Create Account' : 'Log In';
-        }
+    /* --- AUTH LOGIC --- */
+    function setAuthMode(mode) {
+        currentAuthMode = mode;
+        document.getElementById('auth-error').style.display = 'none';
+        document.getElementById('mode-login').classList.toggle('active', mode === 'login');
+        document.getElementById('mode-register').classList.toggle('active', mode === 'register');
+        document.getElementById('name-field-container').style.display = (mode === 'register') ? 'block' : 'none';
+        document.getElementById('submit-btn').innerText = (mode === 'register') ? 'Create Account' : 'Log In';
+    }
 
-        document.getElementById('db-auth-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('auth-name').value.trim();
-            const email = document.getElementById('auth-email').value.trim();
-            try {
-                const response = await fetch(`${API_URL}/display`);
-                const users = await response.json();
-                const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-                if (currentAuthMode === 'login') {
-                    if (existingUser) { enterDashboard(existingUser.name); } 
-                    else { showAuthError("Email not found. Please register first."); }
-                } else {
-                    if (existingUser) { showAuthError("Email is already registered."); } 
-                    else {
-                        const regRes = await fetch(`${API_URL}/users`, {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({ name, email })
-                        });
-                        if (regRes.ok) { enterDashboard(name); } 
-                        else { showAuthError("Registration failed. Try again."); }
-                    }
+    document.getElementById('db-auth-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('auth-name').value.trim();
+        const email = document.getElementById('auth-email').value.trim();
+        try {
+            const response = await fetch(`${API_URL}/display`);
+            const users = await response.json();
+            const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+            if (currentAuthMode === 'login') {
+                if (existingUser) { enterDashboard(existingUser.name); } 
+                else { showAuthError("Email not found. Please register first."); }
+            } else {
+                if (existingUser) { showAuthError("Email is already registered."); } 
+                else {
+                    const regRes = await fetch(`${API_URL}/users`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ name, email })
+                    });
+                    if (regRes.ok) { enterDashboard(name); } 
+                    else { showAuthError("Registration failed. Try again."); }
                 }
-            } catch (err) { alert("Database Connection Error. Check your local server."); }
-        };
-
-        function showAuthError(msg) {
-            const errorLabel = document.getElementById('auth-error');
-            errorLabel.innerText = msg;
-            errorLabel.style.display = 'block';
-        }
-
-        function enterDashboard(displayName) {
-            document.getElementById('user-display-name').innerText = displayName;
-            document.getElementById('login-page').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('login-page').style.display = 'none';
-                document.getElementById('main-dashboard').style.display = 'flex';
-                initDashboard();
-            }, 300);
-        }
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-            document.getElementById('main-content').classList.toggle('full-width');
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        function filterOrgs(query) {
-            const cards = document.querySelectorAll('.club-card');
-            cards.forEach(card => {
-                const name = card.querySelector('h3').innerText.toLowerCase();
-                card.style.display = name.includes(query.toLowerCase()) ? 'flex' : 'none';
-            });
-        }
-
-        function initDashboard() {
-            renderOrgs(orgData);
-            fetchUsers();
-            updateTempUI();
-        }
-
-        function renderOrgs(data) {
-            const container = document.getElementById('org-container');
-            container.innerHTML = data.map(org => {
-                // Pinapagana ang circular image rendering
-                const logoHtml = `<img src="${org.logo}" class="org-logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041916.png'">`;
-                
-                return `
-                    <div class="club-card">
-                        <div class="org-logo-container">${logoHtml}</div>
-                        <div style="text-align: center;">
-                            <h3>${org.name}</h3>
-                            <span class="status-badge">Official Org</span>
-                            <p class="org-description">${org.description}</p>
-                        </div>
-                        <button class="btn-primary" onclick="openModal('${org.name}')">Apply to Join</button>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function openModal(orgName) {
-            document.getElementById('modal-title').innerText = "Join " + orgName;
-            document.getElementById('form-org-name').value = orgName;
-            document.getElementById('modal-overlay').style.display = 'flex';
-        }
-
-        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-
-        document.getElementById('app-form').onsubmit = (e) => {
-            e.preventDefault();
-            const application = {
-                org: document.getElementById('form-org-name').value,
-                fullName: document.getElementById('app-fname').value + " " + document.getElementById('app-lname').value,
-                date: new Date().toLocaleDateString(),
-                id: Math.floor(Math.random() * 9000) + 1000
-            };
-            let apps = JSON.parse(localStorage.getItem('cpsu_apps') || '[]');
-            apps.push(application);
-            localStorage.setItem('cpsu_apps', JSON.stringify(apps));
-            alert('Your application for ' + application.org + ' has been sent!');
-            closeModal();
-            updateTempUI();
-        };
-
-        function updateTempUI() {
-            const list = document.getElementById('tempAppList');
-            const apps = JSON.parse(localStorage.getItem('cpsu_apps') || '[]');
-            if(apps.length === 0) { list.innerHTML = "<div style='text-align:center; padding: 3rem; color: #64748b;'><i class='fas fa-folder-open' style='font-size: 3rem; margin-bottom: 1rem;'></i><p>No applications found.</p></div>"; return; }
-            list.innerHTML = apps.map(a => `
-                <div style="background:white; padding:1.5rem 2rem; border-radius:16px; border-left:6px solid var(--cpsu-green); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);">
-                    <div>
-                        <h4 style="font-size: 1.1rem; font-weight: 800;">${a.org}</h4>
-                        <p style="font-size: 0.85rem; color: #64748b;">Ref ID: #${a.id} • Submitted on ${a.date}</p>
-                    </div>
-                    <span class="status-badge" style="background: #fff7ed; color: #c2410c;">Under Review</span>
-                </div>
-            `).join('');
-        }
-
-        async function fetchUsers() {
-            try {
-                const response = await fetch(`${API_URL}/display`);
-                const users = await response.json();
-                document.getElementById('tableBody').innerHTML = users.map(user => `
-                    <tr>
-                        <td><span style="font-family: monospace; font-weight: 700; color: var(--cpsu-green);">#CPSU-${user.id}</span></td>
-                        <td><div style="font-weight: 700;">${user.name}</div></td>
-                        <td style="color: #64748b;">${user.email}</td>
-                        <td style="text-align: right;"><button class="btn-delete" onclick="deleteUser(${user.id})"><i class="fas fa-trash"></i></button></td>
-                    </tr>
-                `).join('');
-            } catch(e) {}
-        }
-
-        async function deleteUser(id) {
-            if (confirm('Are you sure you want to remove this member?')) {
-                await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-                fetchUsers();
             }
+        } catch (err) { alert("Database Connection Error."); }
+    };
+
+    function showAuthError(msg) {
+        const errorLabel = document.getElementById('auth-error');
+        errorLabel.innerText = msg;
+        errorLabel.style.display = 'block';
+    }
+
+    /* --- DASHBOARD NAVIGATION --- */
+    function enterDashboard(displayName) {
+        document.getElementById('user-display-name').innerText = displayName;
+        document.getElementById('login-page').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-dashboard').style.display = 'flex';
+            initDashboard();
+        }, 300);
+    }
+
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+        document.getElementById('main-content').classList.toggle('full-width');
+    }
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        if(event) event.currentTarget.classList.add('active');
+    }
+
+    /* --- INITIALIZATION --- */
+    function initDashboard() {
+        renderOrgs(orgData);
+        fetchUsers();
+        updateTempUI();
+        injectEditModal(); 
+    }
+
+    function renderOrgs(data) {
+        const container = document.getElementById('org-container');
+        container.innerHTML = data.map(org => {
+            const logoHtml = `<img src="${org.logo}" class="org-logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041916.png'">`;
+            return `
+                <div class="club-card">
+                    <div class="org-logo-container">${logoHtml}</div>
+                    <div style="text-align: center;">
+                        <h3>${org.name}</h3>
+                        <span class="status-badge">Official Org</span>
+                        <p class="org-description">${org.description}</p>
+                    </div>
+                    <button class="btn-primary" onclick="openModal('${org.name}')">Apply to Join</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    /* --- MEMBER DIRECTORY (CRUD) --- */
+    async function fetchUsers() {
+        try {
+            const response = await fetch(`${API_URL}/display`);
+            const users = await response.json();
+            document.getElementById('tableBody').innerHTML = users.map(user => `
+                <tr>
+                    <td><span style="font-family: monospace; font-weight: 700; color: var(--cpsu-green);">#CPSU-${user.id}</span></td>
+                    <td><div style="font-weight: 700;">${user.name}</div></td>
+                    <td style="color: #64748b;">${user.email}</td>
+                    <td style="text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                        <button onclick="openEditModal(${user.id}, '${user.name}', '${user.email}')" style="background: #fef3c7; color: #f59e0b; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-delete" onclick="deleteUser(${user.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        } catch(e) { console.error("Fetch error:", e); }
+    }
+
+    async function deleteUser(id) {
+        if (confirm('Are you sure you want to remove this member?')) {
+            await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            fetchUsers();
         }
-    </script>
+    }
+
+    /* --- EDIT MODAL LOGIC --- */
+    function injectEditModal() {
+        if (!document.getElementById('edit-modal-overlay')) {
+            const modalHtml = `
+                <div id="edit-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+                    <div style="background:white; padding:2rem; border-radius:16px; width:90%; max-width:400px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <h2 style="margin-bottom:1.5rem; color:#166534;">Edit Member</h2>
+                        <form id="edit-user-form">
+                            <input type="hidden" id="edit-user-id">
+                            <label style="display:block; margin-bottom:5px; font-weight:600;">Full Name</label>
+                            <input type="text" id="edit-user-name" required style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ddd; border-radius:8px;">
+                            <label style="display:block; margin-bottom:5px; font-weight:600;">Email Address</label>
+                            <input type="email" id="edit-user-email" required style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px;">
+                            <button type="submit" style="width:100%; padding:12px; background:#166534; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600;">Save Changes</button>
+                            <button type="button" onclick="closeEditModal()" style="width:100%; margin-top:10px; background:none; border:none; color:#64748b; cursor:pointer;">Cancel</button>
+                        </form>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            document.getElementById('edit-user-form').onsubmit = async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-user-id').value;
+                const name = document.getElementById('edit-user-name').value;
+                const email = document.getElementById('edit-user-email').value;
+
+                await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                closeEditModal(); 
+                fetchUsers();
+            };
+        }
+    }
+
+    function openEditModal(id, name, email) {
+        document.getElementById('edit-user-id').value = id;
+        document.getElementById('edit-user-name').value = name;
+        document.getElementById('edit-user-email').value = email;
+        document.getElementById('edit-modal-overlay').style.display = 'flex';
+    }
+
+    function closeEditModal() { document.getElementById('edit-modal-overlay').style.display = 'none'; }
+
+    // Placeholder functions for Join Application
+    function openModal(orgName) { 
+        document.getElementById('modal-title').innerText = "Join " + orgName;
+        document.getElementById('form-org-name').value = orgName;
+        document.getElementById('modal-overlay').style.display = 'flex'; 
+    }
+    function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+    function updateTempUI() { /* Application list logic here */ }
+</script>
 </body>
 </html>
