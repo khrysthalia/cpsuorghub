@@ -3,9 +3,10 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './users.dto';
 import { Users } from './users.entity';
 
+
 @Controller('users')
 export class UsersController {
-    constructor(private readonly userservice: UsersService) {}
+    constructor(private readonly userservice: UsersService) { }
 
     // Check database connection
     @Get('db')
@@ -13,16 +14,14 @@ export class UsersController {
         return await this.userservice.checkdb();
     }
 
-    // Insert user (FIXED ✅)
-    @Post()
-    async insert(
-        @Body() body: { name: string; email: string }
-    ): Promise<Users> {
+    // Insert users info
+    @Post('users')
+    async insert(@Body() body: { name: string; email: string }): Promise<Users> {
         return await this.userservice.insert(body);
     }
 
-    // Display all users (CLEANED ✅)
-    @Get()
+    // display all users
+    @Get('display')
     async findAll(): Promise<Users[]> {
         return await this.userservice.findAll();
     }
@@ -33,7 +32,7 @@ export class UsersController {
         return this.userservice.findOne1(+id);
     }
 
-    // Update user (already correct)
+    // Update user
     @Patch(':id')
     update(
         @Param('id') id: string,
