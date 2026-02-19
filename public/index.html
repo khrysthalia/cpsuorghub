@@ -389,7 +389,6 @@
     const API_URL = 'https://cpsuorghub-production.up.railway.app/users';
     let currentAuthMode = 'login';
 
-    /* --- ORG DATA --- */
     const orgData = [
         { name: "SSG", logo: "SSG.jpg", isImage: true, description: "The Supreme Student Government represents the student body and leads campus-wide initiatives for student welfare." }, 
         { name: "CSS", logo: "CSS.jpg", isImage: true, description: "The Crimonology Student Society organization fosters discipline, integrity, and leadership for future law enforcers." },
@@ -450,7 +449,6 @@
         errorLabel.style.display = 'block';
     }
 
-    /* --- DASHBOARD NAVIGATION --- */
     function enterDashboard(displayName) {
         document.getElementById('user-display-name').innerText = displayName;
         document.getElementById('login-page').style.opacity = '0';
@@ -473,7 +471,6 @@
         if(event) event.currentTarget.classList.add('active');
     }
 
-    /* --- INITIALIZATION --- */
     function initDashboard() {
         renderOrgs(orgData);
         fetchUsers();
@@ -499,7 +496,7 @@
         }).join('');
     }
 
-    /* --- MEMBER DIRECTORY (CRUD) --- */
+    
     async function fetchUsers() {
         try {
             const response = await fetch(`${API_URL}/display`);
@@ -529,7 +526,6 @@
         }
     }
 
-    /* --- EDIT MODAL LOGIC --- */
     function injectEditModal() {
         if (!document.getElementById('edit-modal-overlay')) {
             const modalHtml = `
@@ -575,7 +571,7 @@
 
     function closeEditModal() { document.getElementById('edit-modal-overlay').style.display = 'none'; }
 
-    // Placeholder functions for Join Application
+    
     function openModal(orgName) { 
         document.getElementById('modal-title').innerText = "Join " + orgName;
         document.getElementById('form-org-name').value = orgName;
