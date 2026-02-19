@@ -5,7 +5,7 @@ import { Users } from './users.entity';
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly userservice: UsersService) { }
+    constructor(private readonly userservice: UsersService) {}
 
     // Check database connection
     @Get('db')
@@ -13,14 +13,16 @@ export class UsersController {
         return await this.userservice.checkdb();
     }
 
-    // Insert users info
-    @Post('users')
-    async insert(@Body() body: { name: string; email: string }): Promise<Users> {
+    // Insert user (FIXED ✅)
+    @Post()
+    async insert(
+        @Body() body: { name: string; email: string }
+    ): Promise<Users> {
         return await this.userservice.insert(body);
     }
 
-    // display all users
-    @Get('display')
+    // Display all users (CLEANED ✅)
+    @Get()
     async findAll(): Promise<Users[]> {
         return await this.userservice.findAll();
     }
@@ -31,7 +33,7 @@ export class UsersController {
         return this.userservice.findOne1(+id);
     }
 
-    // Update user
+    // Update user (already correct)
     @Patch(':id')
     update(
         @Param('id') id: string,
