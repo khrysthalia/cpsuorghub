@@ -14,7 +14,7 @@ export class UsersController {
     }
 
     // Insert users info
-    @Post('users')
+    @Post()
     async insert(@Body() body: { name: string; email: string }): Promise<Users> {
         return await this.userservice.insert(body);
     }
