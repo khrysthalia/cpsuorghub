@@ -417,7 +417,51 @@
         { name: "JPSTECH", logo: "JPSTECH.jpg", isImage: true, description: "The organization for industrial technology students, advancing technical skills and industrial innovations." }
     ];
 
-    /* --- SESSION PERSISTENCE --- */
+    document.getElementById('app-form').onsubmit = (e) => {
+    e.preventDefault();
+    
+    const orgName = document.getElementById('form-org-name').value;
+    const applicant = {
+        name: `${document.getElementById('app-fname').value} ${document.getElementById('app-lname').value}`,
+        org: orgName,
+        year: document.getElementById('app-year').value,
+        course: document.getElementById('app-course').value,
+        date: new Date().toLocaleDateString(),
+        status: 'Pending Review'
+    };
+
+    let apps = JSON.parse(localStorage.getItem('my_applications') || '[]');
+    apps.push(applicant);
+    localStorage.setItem('my_applications', JSON.stringify(apps));
+
+    alert(`Application submitted to ${orgName}!`);
+    closeModal();
+    renderActivity(); // I-refresh ang activity list
+};
+
+// Function para ipakita ang mga in-applyan sa "My Activity" page
+function renderActivity() {
+    const list = document.getElementById('tempAppList');
+    const apps = JSON.parse(localStorage.getItem('my_applications') || '[]');
+    
+    if (apps.length === 0) {
+        list.innerHTML = `<p style="text-align:center; color:#64748b;">No applications found.</p>`;
+        return;
+    }
+
+    list.innerHTML = apps.map(app => `
+        <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow); border-left: 5px solid var(--gold);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="color: var(--cpsu-green-dark);">${app.org}</h4>
+                    <p style="font-size: 0.8rem; color: #64748b;">Applied on: ${app.date}</p>
+                </div>
+                <span class="status-badge">${app.status}</span>
+            </div>
+        </div>
+    `).reverse().join('');
+}
+    
     window.onload = () => {
         const savedUser = localStorage.getItem('cpsu_user_name');
         if (savedUser) {
@@ -425,7 +469,7 @@
         }
     };
 
-    /* --- AUTHENTICATION LOGIC --- */
+   
     function setAuthMode(mode) {
         currentAuthMode = mode;
         document.getElementById('auth-error').style.display = 'none';
@@ -469,7 +513,7 @@
     }
 
     function enterDashboard(displayName, isRefresh = false) {
-        // Save to browser memory
+       
         localStorage.setItem('cpsu_user_name', displayName);
         document.getElementById('user-display-name').innerText = displayName;
         
