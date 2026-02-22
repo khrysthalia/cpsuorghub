@@ -417,51 +417,61 @@
         { name: "JPSTECH", logo: "JPSTECH.jpg", isImage: true, description: "The organization for industrial technology students, advancing technical skills and industrial innovations." }
     ];
 
+    /* --- APPLICATION LOGIC (WITH PERSISTENCE) --- */
     document.getElementById('app-form').onsubmit = (e) => {
-    e.preventDefault();
-    
-    const orgName = document.getElementById('form-org-name').value;
-    const applicant = {
-        name: `${document.getElementById('app-fname').value} ${document.getElementById('app-lname').value}`,
-        org: orgName,
-        year: document.getElementById('app-year').value,
-        course: document.getElementById('app-course').value,
-        date: new Date().toLocaleDateString(),
-        status: 'Pending Review'
+        e.preventDefault();
+        
+        // Kinukuha natin kung sino ang naka-login para itatak sa application
+        const currentUser = localStorage.getItem('cpsu_user_name');
+        const orgName = document.getElementById('form-org-name').value;
+        
+        const applicant = {
+            owner: currentUser, // Eto ang susi para hindi mawala at hindi maghalo ang data
+            name: `${document.getElementById('app-fname').value} ${document.getElementById('app-lname').value}`,
+            org: orgName,
+            year: document.getElementById('app-year').value,
+            course: document.getElementById('app-course').value,
+            date: new Date().toLocaleDateString(),
+            status: 'Pending Review'
+        };
+
+        let apps = JSON.parse(localStorage.getItem('my_applications') || '[]');
+        apps.push(applicant);
+        localStorage.setItem('my_applications', JSON.stringify(apps));
+
+        alert(`Application submitted to ${orgName}!`);
+        closeModal();
+        renderActivity(); // I-refresh agad ang listahan
     };
 
-    let apps = JSON.parse(localStorage.getItem('my_applications') || '[]');
-    apps.push(applicant);
-    localStorage.setItem('my_applications', JSON.stringify(apps));
+    function renderActivity() {
+        const list = document.getElementById('tempAppList');
+        const allApps = JSON.parse(localStorage.getItem('my_applications') || '[]');
+        const currentUser = localStorage.getItem('cpsu_user_name');
 
-    alert(`Application submitted to ${orgName}!`);
-    closeModal();
-    renderActivity(); // I-refresh ang activity list
-};
+        // FILTER: Ipakita lang ang inapplyan ng taong naka-login
+        const myApps = allApps.filter(app => app.owner === currentUser);
+        
+        if (myApps.length === 0) {
+            list.innerHTML = `<p style="text-align:center; color:#64748b; padding: 20px;">No applications found for ${currentUser}.</p>`;
+            return;
+        }
 
-// Function para ipakita ang mga in-applyan sa "My Activity" page
-function renderActivity() {
-    const list = document.getElementById('tempAppList');
-    const apps = JSON.parse(localStorage.getItem('my_applications') || '[]');
-    
-    if (apps.length === 0) {
-        list.innerHTML = `<p style="text-align:center; color:#64748b;">No applications found.</p>`;
-        return;
+        list.innerHTML = myApps.map(app => `
+            <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow); border-left: 5px solid #fbbf24; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4 style="color: #166534; margin:0;">${app.org}</h4>
+                        <p style="font-size: 0.8rem; color: #64748b; margin: 4px 0;">Applicant: ${app.name}</p>
+                        <p style="font-size: 0.75rem; color: #94a3b8; margin:0;">Applied on: ${app.date}</p>
+                    </div>
+                    <span class="status-badge" style="background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;">${app.status}</span>
+                </div>
+            </div>
+        `).reverse().join('');
     }
 
-    list.innerHTML = apps.map(app => `
-        <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: var(--shadow); border-left: 5px solid var(--gold);">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h4 style="color: var(--cpsu-green-dark);">${app.org}</h4>
-                    <p style="font-size: 0.8rem; color: #64748b;">Applied on: ${app.date}</p>
-                </div>
-                <span class="status-badge">${app.status}</span>
-            </div>
-        </div>
-    `).reverse().join('');
-}
-    
+    /* --- AUTHENTICATION & DASHBOARD --- */
     window.onload = () => {
         const savedUser = localStorage.getItem('cpsu_user_name');
         if (savedUser) {
@@ -469,7 +479,6 @@ function renderActivity() {
         }
     };
 
-   
     function setAuthMode(mode) {
         currentAuthMode = mode;
         document.getElementById('auth-error').style.display = 'none';
@@ -513,7 +522,6 @@ function renderActivity() {
     }
 
     function enterDashboard(displayName, isRefresh = false) {
-       
         localStorage.setItem('cpsu_user_name', displayName);
         document.getElementById('user-display-name').innerText = displayName;
         
@@ -548,13 +556,14 @@ function renderActivity() {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
-        if(event) event.currentTarget.classList.add('active');
+        if(window.event) window.event.currentTarget.classList.add('active');
     }
 
     /* --- DASHBOARD INITIALIZATION --- */
     function initDashboard() {
         renderOrgs(orgData);
         fetchUsers();
+        renderActivity(); // Tinitiyak nito na lalabas ang history pagka-login/refresh
         injectEditModal(); 
     }
 
@@ -576,7 +585,7 @@ function renderActivity() {
         }).join('');
     }
 
-    /* --- MEMBER DIRECTORY (CRUD LOGIC) --- */
+    /* --- MEMBER DIRECTORY (CRUD) --- */
     async function fetchUsers() {
         try {
             const response = await fetch(`${API_URL}/display`);
@@ -649,11 +658,10 @@ function renderActivity() {
                         closeEditModal(); 
                         fetchUsers();
                     } else {
-                        alert("Update failed. Please check the API configuration.");
+                        alert("Update failed.");
                     }
                 } catch (err) {
-                    console.error("Update Error:", err);
-                    alert("Connection error while saving changes.");
+                    alert("Connection error.");
                 } finally {
                     saveBtn.innerText = "Save Changes";
                     saveBtn.disabled = false;
