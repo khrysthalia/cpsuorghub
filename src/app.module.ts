@@ -10,7 +10,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      url: process.env.MYSQL_URL, 
+      url: process.env.MYSQL_PUBLIC_URL, 
       autoLoadEntities: true,
       synchronize: true, 
     }),
